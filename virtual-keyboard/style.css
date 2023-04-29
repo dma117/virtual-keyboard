@@ -67,7 +67,11 @@
   transition: all 0.1s;
 }
 
-.keyboard__key:hover {
+.keyboard__key:focus {
+  outline: none;
+}
+
+.keyboard__key_pressed {
   color: white;
   border: 2px solid white;
 }

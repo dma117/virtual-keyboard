@@ -68,6 +68,17 @@ const specialKeys = [
 const additionalLetterKeys = [
   '`', '-', '=', '[', ']', '\\', ';', '\'', '.', '/', 'space'
 ];
+const keyCodes = [
+  "Backquote", "Digit1", "Digit2", "Digit3", "Digit4",  "Digit5",
+  "Digit6",  "Digit7",  "Digit8",  "Digit9", "Digit0", "Minus",
+  "Equal", "Backspace", "Tab", "KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
+  "KeyI", "KeyO", "KeyP", "BracketLeft", "BracketRight", "Delete", "CapsLock",
+  "KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL",
+  "Semicolon", "Quote", "Enter", "ShiftLeft", "KeyZ", "KeyX", "KeyC", "KeyV",
+  "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", "ArrowUp", "ShiftRight",
+  "ControlLeft", "MetaLeft", "AltLeft", "Space", "AltRight", "ArrowLeft",
+  "ArrowDown", "ArrowRight", "ControlRight",
+]
 
 let isLetterKey = (keyValue) => {
   const codeA = 65;
@@ -79,19 +90,22 @@ let isLetterKey = (keyValue) => {
 let isDigitKey = (keyValue) => keyValue >= "0" && keyValue <= "9";
 let isSpecialKey = (keyValue) => specialKeys.includes(keyValue);
 
-const keyboardKeys = [];
+const keyboardKeys = {};
+const keyboardElements = new Map();
+
 for (let i = 0; i < availableKeyValues.length; i++) {
+  let keyCode = keyCodes[i];
   let keyValue = availableKeyValues[i];
   let keyType = 
       isLetterKey(keyValue) ? keyTypes.letter :
       isDigitKey(keyValue) ? keyTypes.digit :
       keyTypes.special;
   let key = new Key(keyValue, keyType);
-  keyboardKeys.push(key);
+  keyboardKeys[keyCode] = key;
 }
 
-for (let i = 0; i < keyboardKeys.length; i++) {
-  let keyValue = keyboardKeys[i].value;
+for (let keyCode in keyboardKeys) {
+  let keyValue = keyboardKeys[keyCode].value;
   let key = document.createElement('button');
   key.innerText = keyValue;
   key.classList.add("keyboard__key");
@@ -119,5 +133,25 @@ for (let i = 0; i < keyboardKeys.length; i++) {
       key.innerText = '';
       break;
   }
+  key.addEventListener('mousedown', () => {
+    key.classList.add("keyboard__key_pressed");
+  })
+  key.addEventListener('mouseup', () => {
+    key.classList.remove("keyboard__key_pressed");
+  })
+  keyboardElements.set(keyCode, key);
   keyboard.append(key);
 }
+
+document.addEventListener('keydown', function(event) {
+  if (keyboardElements.has(event.code)) {
+    keyboardElements.get(event.code).classList.add("keyboard__key_pressed");
+  }
+});
+
+
+document.addEventListener('keyup', function(event) {
+  if (keyboardElements.has(event.code)) {
+    keyboardElements.get(event.code).classList.remove("keyboard__key_pressed");
+  }
+});
