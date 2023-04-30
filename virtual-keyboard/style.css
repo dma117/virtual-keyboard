@@ -110,3 +110,10 @@
 .keyboard__key_space{
   width: 421px;
 }
+
+
+@media (max-width: 951px) {
+  html {
+    width: fit-content;
+  }
+}
