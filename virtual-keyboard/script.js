@@ -1,5 +1,5 @@
-let section = document.createElement('section');
-let textarea = document.createElement('textarea');
+const section = document.createElement('section');
+const textarea = document.createElement('textarea');
 textarea.classList.add("textarea", "textarea_centered-h");
 textarea.setAttribute("name", "text");
 textarea.setAttribute("id", "text");
@@ -20,7 +20,7 @@ document.body.insertAdjacentHTML(
   </section>`
 );
 
-let keyboard = document.querySelector(".keyboard");
+const keyboard = document.querySelector(".keyboard");
 
 class Key {
   constructor(keyValue, keyType) {
@@ -51,7 +51,7 @@ const keyTypes = {
   special: 'special',
 }
 
-const availableKeyValues = [
+const availableKeyValuesDefault = [
   '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'backspace',
   'tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', 'del',
   'caps lock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '\'', 'enter',
@@ -93,9 +93,9 @@ let isSpecialKey = (keyValue) => specialKeys.includes(keyValue);
 const keyboardKeys = {};
 const keyboardElements = new Map();
 
-for (let i = 0; i < availableKeyValues.length; i++) {
+for (let i = 0; i < availableKeyValuesDefault.length; i++) {
   let keyCode = keyCodes[i];
-  let keyValue = availableKeyValues[i];
+  let keyValue = availableKeyValuesDefault[i];
   let keyType = 
       isLetterKey(keyValue) ? keyTypes.letter :
       isDigitKey(keyValue) ? keyTypes.digit :
@@ -106,7 +106,7 @@ for (let i = 0; i < availableKeyValues.length; i++) {
 
 for (let keyCode in keyboardKeys) {
   let keyValue = keyboardKeys[keyCode].value;
-  let key = document.createElement('button');
+  let key = document.createElement('div');
   key.innerText = keyValue;
   key.classList.add("keyboard__key");
   switch(keyValue) {
@@ -135,6 +135,8 @@ for (let keyCode in keyboardKeys) {
   }
   key.addEventListener('mousedown', () => {
     key.classList.add("keyboard__key_pressed");
+    handleTextarea(keyCode);
+    textarea.focus();
   })
   key.addEventListener('mouseup', () => {
     key.classList.remove("keyboard__key_pressed");
@@ -146,12 +148,24 @@ for (let keyCode in keyboardKeys) {
 document.addEventListener('keydown', function(event) {
   if (keyboardElements.has(event.code)) {
     keyboardElements.get(event.code).classList.add("keyboard__key_pressed");
+    handleTextarea(event.code);
   }
 });
-
 
 document.addEventListener('keyup', function(event) {
   if (keyboardElements.has(event.code)) {
     keyboardElements.get(event.code).classList.remove("keyboard__key_pressed");
   }
 });
+
+const handleTextarea = (keyCode) => {
+  textarea.blur();
+  let text = keyboardElements.get(keyCode).innerText;
+  let start = textarea.selectionStart;
+  let end = textarea.selectionEnd;
+  if (end !== textarea.textLength || start !== end) {
+    textarea.setRangeText(text, start, end, "end");
+  } else {
+    textarea.value += text;
+  }
+}
