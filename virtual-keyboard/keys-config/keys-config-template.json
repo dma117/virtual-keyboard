@@ -1,0 +1,15 @@
+{
+	"keyCode1": {
+		"type": "letter",
+		"value": "letterValue1"
+	},
+	"keyCode2": {
+		"type": "symbol",
+		"primaryValue": "primaryValue1",
+		"secondaryValue": "secondaryValue1"
+	},
+	"keyCode3": {
+		"type": "command",
+		"value": "commandValue1"
+	}
+}

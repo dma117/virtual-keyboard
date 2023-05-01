@@ -1,0 +1,275 @@
+{
+	"Backquote": {
+		"type": "symbol",
+		"primaryValue": "`",
+		"secondaryValue": "~"
+	},
+	"Digit1": {
+		"type": "symbol",
+		"primaryValue": "1",
+		"secondaryValue": "!"
+	},
+	"Digit2": {
+		"type": "symbol",
+		"primaryValue": "2",
+		"secondaryValue": "@"
+	},
+	"Digit3": {
+		"type": "symbol",
+		"primaryValue": "3",
+		"secondaryValue": "#"
+	},
+	"Digit4": {
+		"type": "symbol",
+		"primaryValue": "4",
+		"secondaryValue": "$"
+	},
+	"Digit5": {
+		"type": "symbol",
+		"primaryValue": "5",
+		"secondaryValue": "%"
+	},
+	"Digit6": {
+		"type": "symbol",
+		"primaryValue": "6",
+		"secondaryValue": "^"
+	},
+	"Digit7": {
+		"type": "symbol",
+		"primaryValue": "7",
+		"secondaryValue": "&"
+	},
+	"Digit8": {
+		"type": "symbol",
+		"primaryValue": "8",
+		"secondaryValue": "*"
+	},
+	"Digit9": {
+		"type": "symbol",
+		"primaryValue": "9",
+		"secondaryValue": "("
+	},
+	"Digit0": {
+		"type": "symbol",
+		"primaryValue": "0",
+		"secondaryValue": ")"
+	},
+	"Minus": {
+		"type": "symbol",
+		"primaryValue": "-",
+		"secondaryValue": "_"
+	},
+	"Equal": {
+		"type": "symbol",
+		"primaryValue": "=",
+		"secondaryValue": "+"
+	},
+	"Backspace": {
+		"type": "command",
+		"value": "backspace"
+	},
+	"Tab": {
+		"type": "command",
+		"value": "tab"
+	},
+	"KeyQ": {
+		"type": "letter",
+		"value": "q"
+	},
+	"KeyW": {
+		"type": "letter",
+		"value": "w"
+	},
+	"KeyE": {
+		"type": "letter",
+		"value": "e"
+	},
+	"KeyR": {
+		"type": "letter",
+		"value": "r"
+	},
+	"KeyT": {
+		"type": "letter",
+		"value": "t"
+	},
+	"KeyY": {
+		"type": "letter",
+		"value": "y"
+	},
+	"KeyU": {
+		"type": "letter",
+		"value": "u"
+	},
+	"KeyI": {
+		"type": "letter",
+		"value": "i"
+	},
+	"KeyO": {
+		"type": "letter",
+		"value": "o"
+	},
+	"KeyP": {
+		"type": "letter",
+		"value": "p"
+	},
+	"BracketLeft": {
+		"type": "symbol",
+		"primaryValue": "[",
+		"secondaryValue": "{"
+	},
+	"BracketRight": {
+		"type": "symbol",
+		"primaryValue": "]",
+		"secondaryValue": "}"
+	},
+	"Delete": {
+		"type": "command",
+		"value": "del"
+	},
+	"CapsLock": {
+		"type": "command",
+		"value": "caps lock"
+	},
+	"KeyA": {
+		"type": "letter",
+		"value": "a"
+	},
+	"KeyS": {
+		"type": "letter",
+		"value": "s"
+	},
+	"KeyD": {
+		"type": "letter",
+		"value": "d"
+	},
+	"KeyF": {
+		"type": "letter",
+		"value": "f"
+	},
+	"KeyG": {
+		"type": "letter",
+		"value": "g"
+	},
+	"KeyH": {
+		"type": "letter",
+		"value": "h"
+	},
+	"KeyJ": {
+		"type": "letter",
+		"value": "j"
+	},
+	"KeyK": {
+		"type": "letter",
+		"value": "k"
+	},
+	"KeyL": {
+		"type": "letter",
+		"value": "l"
+	},
+	"Semicolon": {
+		"type": "symbol",
+		"primaryValue": ";",
+		"secondaryValue": ":"
+	},
+	"Quote": {
+		"type": "symbol",
+		"primaryValue": "'",
+		"secondaryValue": "\""
+	},
+	"Enter": {
+		"type": "command",
+		"value": "enter"
+	},
+	"ShiftLeft": {
+		"type": "command",
+		"value": "shift"
+	},
+	"KeyZ": {
+		"type": "letter",
+		"value": "z"
+	},
+	"KeyX": {
+		"type": "letter",
+		"value": "x"
+	},
+	"KeyC": {
+		"type": "letter",
+		"value": "c"
+	},
+	"KeyV": {
+		"type": "letter",
+		"value": "v"
+	},
+	"KeyB": {
+		"type": "letter",
+		"value": "b"
+	},
+	"KeyN": {
+		"type": "letter",
+		"value": "n"
+	},
+	"KeyM": {
+		"type": "letter",
+		"value": "m"
+	},
+	"Comma": {
+		"type": "symbol",
+		"primaryValue": ",",
+		"secondaryValue": "<"
+	},
+	"Period": {
+		"type": "symbol",
+		"primaryValue": ".",
+		"secondaryValue": ">"
+	},
+	"Slash": {
+		"type": "symbol",
+		"primaryValue": "/",
+		"secondaryValue": "?"
+	},
+	"ArrowUp": {
+		"type": "command",
+		"value": "up"
+	},
+	"ShiftRight": {
+		"type": "command",
+		"value": "shift"
+	},
+	"ControlLeft": {
+		"type": "command",
+		"value": "ctrl"
+	},
+	"MetaLeft": {
+		"type": "command",
+		"value": "win"
+	},
+	"AltLeft": {
+		"type": "command",
+		"value": "alt"
+	},
+	"Space": {
+		"type": "symbol",
+		"primaryValue": "space",
+		"secondaryValue": ""
+	},
+	"AltRight": {
+		"type": "command",
+		"value": "alt"
+	},
+	"ArrowLeft": {
+		"type": "command",
+		"value": "left"
+	},
+	"ArrowDown": {
+		"type": "command",
+		"value": "down"
+	},
+	"ArrowRight": {
+		"type": "command",
+		"value": "right"
+	},
+	"ControlRight": {
+		"type": "command",
+		"value": "ctrl"
+	}
+}
