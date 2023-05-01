@@ -135,6 +135,9 @@ const handleTextarea = (keyCode) => {
         "end"
       );
     }
+    if (keyCode === "Enter") {
+      textarea.setRangeText("\n", start, end, "end");
+    }
     return;
   }
   if (end !== textarea.textLength || start !== end) {
