@@ -52,6 +52,37 @@ function setKeys(keys) {
   }
 }
 
+function addUpperCase(keys) {
+  for (let keyCode of keyCodes) {
+    let key = keys[keyCode];
+    if (keyType(key) === "letter") {
+      keyboardElements.get(keyCode).classList.add('keyboard__key_uppercase');
+    }
+  }
+}
+
+function removeUpperCase(keys) {
+  for (let keyCode of keyCodes) {
+    let key = keys[keyCode];
+    if (keyType(key) === "letter") {
+      keyboardElements.get(keyCode).classList.remove('keyboard__key_uppercase');
+    }
+  }
+}
+
+function updateSymbolKeys(keys, valueType) {
+  for (let keyCode of keyCodes) {
+    let key = keys[keyCode];
+    if (keyType(key) === "symbol") {
+      if (key.primaryValue === "space") continue;
+      keyboardElements.get(keyCode).innerText = 
+        valueType === "primary" ?
+        keys[keyCode].primaryValue :
+        keys[keyCode].secondaryValue;
+    }
+  }
+}
+
 function addEventListenersToMouse() {
   for (let [keyCode, keyboardElement] of keyboardElements) {
     keyboardElement.addEventListener('mousedown', () => {
@@ -122,10 +153,20 @@ const handleCommandKeysDown = (event) => {
     changeKeysMode();
     setKeys(keys[keysMode]);
   }
+  if (event.shiftKey && !appStates["changingPrimaryValues"]) {
+    appStates["changingPrimaryValues"] = true;
+    addUpperCase(keys[keysMode]);
+    updateSymbolKeys(keys[keysMode], "secondary");
+  }
 }
 
 const handleCommandKeysUp = (event) => {
   if (event.altKey ^ event.ctrlKey) {
     appStates["changingLang"] = false;
+  }
+  if (!event.shiftKey) {
+    appStates["changingPrimaryValues"] = false;
+    removeUpperCase(keys[keysMode]);
+    updateSymbolKeys(keys[keysMode], "primary");
   }
 }
