@@ -138,6 +138,9 @@ const handleTextarea = (keyCode) => {
     if (keyCode === "Enter") {
       textarea.setRangeText("\n", start, end, "end");
     }
+    if (keyCode === "Tab") {
+      textarea.setRangeText("    ", start, end, "end");
+    }
     if (keyCode === "ArrowRight") {
       textarea.setSelectionRange(start + 1, end + 1);
     }
