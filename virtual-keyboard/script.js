@@ -115,12 +115,20 @@ document.addEventListener('keyup', function(event) {
 
 const handleTextarea = (keyCode) => {
   let key = keys[keysMode][keyCode];
-  if (keyType(key) === "command") {
-    return;
-  }
   let text = keyboardElements.get(keyCode).innerText;
   let start = textarea.selectionStart;
   let end = textarea.selectionEnd;
+  if (keyType(key) === "command") {
+    if (keyCode === "Backspace") {
+      textarea.setRangeText(
+        "",
+        start == end ? start - 1 : start,
+        end,
+        "end"
+      );
+    }
+    return;
+  }
   if (end !== textarea.textLength || start !== end) {
     textarea.setRangeText(text, start, end, "end");
   } else {
