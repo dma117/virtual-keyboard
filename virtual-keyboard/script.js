@@ -1,36 +1,20 @@
 import { CommandKey, LetterKey, SymbolKey } from './classes.js';
 import { keysObj } from './keys-config-parser.js';
+import { keyboardElements, textarea } from './build-layout.js';
+import { keyCodes } from './key-codes.js';
 
 const path_keys_en = "./keys-config/keys-config-en.json";
 const path_keys_ru = "./keys-config/keys-config-ru.json";
 const keysEn = keysObj(path_keys_en);
 const keysRu = keysObj(path_keys_ru);
-console.log(keysEn);
-console.log(keysEn["Backquote"].primaryValue)
+const keys = [keysEn, keysRu];
+let keysMode = 0;
+const changeKeysMode = () => { keysMode = (keysMode + 1) % keys.length };
 
-const section = document.createElement('section');
-const textarea = document.createElement('textarea');
-textarea.classList.add("textarea", "textarea_centered-h");
-textarea.setAttribute("name", "text");
-textarea.setAttribute("id", "text");
-textarea.setAttribute("cols", "100");
-textarea.setAttribute("rows", "15");
-section.append(textarea);
-document.body.append(section);
-document.body.insertAdjacentHTML(
-  "beforeend",
-  `<section class="keyboard keyboard_centered-h keyboard_under">
-  </section>`
-);
-document.body.insertAdjacentHTML(
-  "beforeend",
-  `<section class="info info_centered-h info_under">
-  <p class="info__text">Клавиатура создана в ОС Windows</p>
-  <p class="info__text">Для переключения языка</p>
-  </section>`
-);
-
-const keyboard = document.querySelector(".keyboard");
+const appStates = {
+  "changingLang": false,
+  "changingPrimaryValues": false
+}
 
 const keyType = (key) => {
   if (key instanceof LetterKey) {
@@ -44,60 +28,7 @@ const keyType = (key) => {
   }
 }
 
-const keyCodes = [
-  "Backquote", "Digit1", "Digit2", "Digit3", "Digit4",  "Digit5",
-  "Digit6",  "Digit7",  "Digit8",  "Digit9", "Digit0", "Minus",
-  "Equal", "Backspace", "Tab", "KeyQ", "KeyW", "KeyE", "KeyR", "KeyT", "KeyY", "KeyU",
-  "KeyI", "KeyO", "KeyP", "BracketLeft", "BracketRight", "Delete", "CapsLock",
-  "KeyA", "KeyS", "KeyD", "KeyF", "KeyG", "KeyH", "KeyJ", "KeyK", "KeyL",
-  "Semicolon", "Quote", "Enter", "ShiftLeft", "KeyZ", "KeyX", "KeyC", "KeyV",
-  "KeyB", "KeyN", "KeyM", "Comma", "Period", "Slash", "ArrowUp", "ShiftRight",
-  "ControlLeft", "MetaLeft", "AltLeft", "Space", "AltRight", "ArrowLeft",
-  "ArrowDown", "ArrowRight", "ControlRight",
-]
-
-const keyboardElements = new Map();
-
-for (let keyCode of keyCodes) {
-  let keyElement = document.createElement('div');
-  keyElement.classList.add("keyboard__key");
-  switch(keyCode) {
-    case 'Backspace':
-      keyElement.classList.add("keyboard__key_backspace");
-      break;
-    case 'Tab':
-      keyElement.classList.add("keyboard__key_tab");
-      break;
-    case 'Delete':
-      keyElement.classList.add("keyboard__key_del");
-      break;
-    case 'CapsLock':
-      keyElement.classList.add("keyboard__key_caps-lock");
-      break;
-    case 'Enter':
-      keyElement.classList.add("keyboard__key_enter");
-      break;
-    case 'ShiftLeft':
-    case 'ShiftRight':
-      keyElement.classList.add("keyboard__key_shift");
-      break;
-    case 'Space':
-      keyElement.classList.add("keyboard__key_space");
-      break;
-  }
-  keyElement.addEventListener('mousedown', () => {
-    keyElement.classList.add("keyboard__key_pressed");
-    handleMouseUp(keyElement);
-    handleTextarea(keyCode);
-    textarea.focus();
-  })
-  keyElement.addEventListener('mouseup', () => {
-    keyElement.classList.remove("keyboard__key_pressed");
-  })
-  keyboardElements.set(keyCode, keyElement);
-  keyboard.append(keyElement);
-}
-
+addEventListenersToMouse();
 setKeys(keysEn);
 
 function setKeys(keys) {
@@ -121,10 +52,25 @@ function setKeys(keys) {
   }
 }
 
+function addEventListenersToMouse() {
+  for (let [keyCode, keyboardElement] of keyboardElements) {
+    keyboardElement.addEventListener('mousedown', () => {
+      keyboardElement.classList.add("keyboard__key_pressed");
+      handleMouseUp(keyboardElement);
+      handleTextarea(keyCode);
+      textarea.focus();
+    })
+    keyboardElement.addEventListener('mouseup', () => {
+      keyboardElement.classList.remove("keyboard__key_pressed");
+    })
+  }
+}
+
 document.addEventListener('keydown', function(event) {
   if (keyboardElements.has(event.code)) {
     keyboardElements.get(event.code).classList.add("keyboard__key_pressed");
-    handleKeyUp(keyboardElements.get(event.code));
+    handleCommandKeysDown(event);
+    handleKeyUp(keyboardElements.get(event.code), event);
     handleTextarea(event.code);
   }
 });
@@ -132,11 +78,15 @@ document.addEventListener('keydown', function(event) {
 document.addEventListener('keyup', function(event) {
   if (keyboardElements.has(event.code)) {
     keyboardElements.get(event.code).classList.remove("keyboard__key_pressed");
+    handleCommandKeysUp(event);
   }
 });
 
 const handleTextarea = (keyCode) => {
-  textarea.blur();
+  let key = keys[keysMode][keyCode];
+  if (keyType(key) === "command") {
+    return;
+  }
   let text = keyboardElements.get(keyCode).innerText;
   let start = textarea.selectionStart;
   let end = textarea.selectionEnd;
@@ -163,4 +113,19 @@ const handleKeyUp = (keyElement) => {
     document.removeEventListener('visibilitychange', mouseUpOutOfElement);
   };
   document.addEventListener('visibilitychange', mouseUpOutOfElement);
+}
+
+const handleCommandKeysDown = (event) => {
+  event.preventDefault();
+  if (event.altKey && event.ctrlKey && !appStates["changingLang"]) {
+    appStates["changingLang"] = true;
+    changeKeysMode();
+    setKeys(keys[keysMode]);
+  }
+}
+
+const handleCommandKeysUp = (event) => {
+  if (event.altKey ^ event.ctrlKey) {
+    appStates["changingLang"] = false;
+  }
 }
