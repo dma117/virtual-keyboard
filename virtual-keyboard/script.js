@@ -127,6 +127,14 @@ const handleTextarea = (keyCode) => {
         "end"
       );
     }
+    if (keyCode === "Delete") {
+      textarea.setRangeText(
+        "",
+        start,
+        start == end ? end + 1 : end,
+        "end"
+      );
+    }
     return;
   }
   if (end !== textarea.textLength || start !== end) {
