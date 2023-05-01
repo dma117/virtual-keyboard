@@ -1,200 +1,212 @@
-import { CommandKey, LetterKey, SymbolKey } from './classes.js';
-import { keysObj } from './keys-config-parser.js';
+import keysObj from './keys-config-parser.js';
 import { keyboardElements, textarea } from './build-layout.js';
-import { keyCodes } from './key-codes.js';
+import keyCodes from './key-codes.js';
+import LetterKey from './classes/letter-key.js';
+import SymbolKey from './classes/symbol-key.js';
+import CommandKey from './classes/command-key.js';
 
-const path_keys_en = "./keys-config/keys-config-en.json";
-const path_keys_ru = "./keys-config/keys-config-ru.json";
-const keysEn = keysObj(path_keys_en);
-const keysRu = keysObj(path_keys_ru);
+const pathKeysEn = './keys-config/keys-config-en.json';
+const pathKeysRu = './keys-config/keys-config-ru.json';
+const keysEn = keysObj(pathKeysEn);
+const keysRu = keysObj(pathKeysRu);
 const keys = [keysEn, keysRu];
 let keysMode = 0;
-const changeKeysMode = () => { keysMode = (keysMode + 1) % keys.length };
+const changeKeysMode = () => { keysMode = (keysMode + 1) % keys.length; };
 
 const appStates = {
-  "changingLang": false,
-  "changingPrimaryValues": false
-}
+  changingLang: false,
+  changingPrimaryValues: false,
+};
 
 const keyType = (key) => {
   if (key instanceof LetterKey) {
-    return "letter";
+    return 'letter';
   }
   if (key instanceof SymbolKey) {
-    return "symbol";
+    return 'symbol';
   }
   if (key instanceof CommandKey) {
-    return "command";
+    return 'command';
   }
-}
+  return 'unknown';
+};
 
-addEventListenersToMouse();
-setKeys(keysEn);
-
-function setKeys(keys) {
-  for (let keyCode of keyCodes) {
-    let key = keys[keyCode];
-    switch(keyType(key)) {
-      case "letter":
-        keyboardElements.get(keyCode).innerText = keys[keyCode].value;
+function setKeys(currentKeys) {
+  for (let i = 0; i < keyCodes.length; i += 1) {
+    const keyCode = keyCodes[i];
+    const key = currentKeys[keyCode];
+    switch (keyType(key)) {
+      case 'letter':
+        keyboardElements.get(keyCode).innerText = currentKeys[keyCode].value;
         break;
-      case "symbol":
-        if (key.primaryValue === "space") {
-          keyboardElements.get(keyCode).innerHTML = "&ensp;";
+      case 'symbol':
+        if (key.primaryValue === 'space') {
+          keyboardElements.get(keyCode).innerHTML = '&ensp;';
         } else {
-          keyboardElements.get(keyCode).innerText = keys[keyCode].primaryValue;
+          keyboardElements.get(keyCode).innerText = currentKeys[keyCode].primaryValue;
         }
         break;
-      case "command":
-        keyboardElements.get(keyCode).innerText = keys[keyCode].value;
+      case 'command':
+        keyboardElements.get(keyCode).innerText = currentKeys[keyCode].value;
+        break;
+      default:
         break;
     }
   }
 }
 
-function addUpperCase(keys) {
-  for (let keyCode of keyCodes) {
-    let key = keys[keyCode];
-    if (keyType(key) === "letter") {
+function addUpperCase(currentKeys) {
+  for (let i = 0; i < keyCodes.length; i += 1) {
+    const keyCode = keyCodes[i];
+    const key = currentKeys[keyCode];
+    if (keyType(key) === 'letter') {
       keyboardElements.get(keyCode).classList.add('keyboard__key_uppercase');
     }
   }
 }
 
-function removeUpperCase(keys) {
-  for (let keyCode of keyCodes) {
-    let key = keys[keyCode];
-    if (keyType(key) === "letter") {
+function removeUpperCase(currentKeys) {
+  for (let i = 0; i < keyCodes.length; i += 1) {
+    const keyCode = keyCodes[i];
+    const key = currentKeys[keyCode];
+    if (keyType(key) === 'letter') {
       keyboardElements.get(keyCode).classList.remove('keyboard__key_uppercase');
     }
   }
 }
 
-function updateSymbolKeys(keys, valueType) {
-  for (let keyCode of keyCodes) {
-    let key = keys[keyCode];
-    if (keyType(key) === "symbol") {
-      if (key.primaryValue === "space") continue;
-      keyboardElements.get(keyCode).innerText = 
-        valueType === "primary" ?
-        keys[keyCode].primaryValue :
-        keys[keyCode].secondaryValue;
+function updateSymbolKeys(currentKeys, valueType) {
+  for (let i = 0; i < keyCodes.length; i += 1) {
+    const keyCode = keyCodes[i];
+    const key = currentKeys[keyCode];
+    if (keyType(key) === 'symbol') {
+      if (key.primaryValue !== 'space') {
+        keyboardElements.get(keyCode).innerText = valueType === 'primary'
+          ? currentKeys[keyCode].primaryValue
+          : currentKeys[keyCode].secondaryValue;
+      }
     }
   }
 }
 
+const handleTextarea = (keyCode) => {
+  const key = keys[keysMode][keyCode];
+  const text = keyboardElements.get(keyCode).innerText;
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  if (keyType(key) === 'command') {
+    if (keyCode === 'Backspace') {
+      textarea.setRangeText(
+        '',
+        start === end ? start - 1 : start,
+        end,
+        'end',
+      );
+    }
+    if (keyCode === 'Delete') {
+      textarea.setRangeText(
+        '',
+        start,
+        start === end ? end + 1 : end,
+        'end',
+      );
+    }
+    if (keyCode === 'Enter') {
+      textarea.setRangeText('\n', start, end, 'end');
+    }
+    if (keyCode === 'Tab') {
+      textarea.setRangeText('    ', start, end, 'end');
+    }
+    if (keyCode === 'ArrowRight') {
+      textarea.setSelectionRange(start + 1, end + 1);
+    }
+    if (keyCode === 'ArrowLeft') {
+      textarea.setSelectionRange(start - 1, end - 1);
+    }
+    return;
+  }
+  if (end !== textarea.textLength || start !== end) {
+    textarea.setRangeText(text, start, end, 'end');
+  } else {
+    textarea.value += text;
+  }
+};
+
+const handleMouseUp = (keyElement) => {
+  const mouseUpOutOfElement = () => {
+    keyElement.classList.remove('keyboard__key_pressed');
+    document.removeEventListener('mouseup', mouseUpOutOfElement);
+    document.removeEventListener('visibilitychange', mouseUpOutOfElement);
+  };
+  document.addEventListener('mouseup', mouseUpOutOfElement);
+  document.addEventListener('visibilitychange', mouseUpOutOfElement);
+};
+
+const handleKeyUp = (keyElement) => {
+  const mouseUpOutOfElement = () => {
+    keyElement.classList.remove('keyboard__key_pressed');
+    document.removeEventListener('visibilitychange', mouseUpOutOfElement);
+  };
+  document.addEventListener('visibilitychange', mouseUpOutOfElement);
+};
+
+const handleCommandKeysDown = (event) => {
+  event.preventDefault();
+  if (event.altKey && event.ctrlKey && !appStates.changingLang) {
+    appStates.changingLang = true;
+    changeKeysMode();
+    setKeys(keys[keysMode]);
+  }
+  if (event.shiftKey && !appStates.changingPrimaryValues) {
+    appStates.changingPrimaryValues = true;
+    addUpperCase(keys[keysMode]);
+    updateSymbolKeys(keys[keysMode], 'secondary');
+  }
+};
+
+const handleCommandKeysUp = (event) => {
+  if ((!event.altKey && event.ctrlKey)
+      || (event.altKey && !event.ctrlKey)) {
+    appStates.changingLang = false;
+  }
+  if (!event.shiftKey) {
+    appStates.changingPrimaryValues = false;
+    removeUpperCase(keys[keysMode]);
+    updateSymbolKeys(keys[keysMode], 'primary');
+  }
+};
+
 function addEventListenersToMouse() {
-  for (let [keyCode, keyboardElement] of keyboardElements) {
+  for (let i = 0; i < keyCodes.length; i += 1) {
+    const keyCode = keyCodes[i];
+    const keyboardElement = keyboardElements.get(keyCode);
     keyboardElement.addEventListener('mousedown', () => {
-      keyboardElement.classList.add("keyboard__key_pressed");
+      keyboardElement.classList.add('keyboard__key_pressed');
       handleMouseUp(keyboardElement);
       handleTextarea(keyCode);
       textarea.focus();
-    })
+    });
     keyboardElement.addEventListener('mouseup', () => {
-      keyboardElement.classList.remove("keyboard__key_pressed");
-    })
+      keyboardElement.classList.remove('keyboard__key_pressed');
+    });
   }
 }
 
-document.addEventListener('keydown', function(event) {
+document.addEventListener('keydown', (event) => {
   if (keyboardElements.has(event.code)) {
-    keyboardElements.get(event.code).classList.add("keyboard__key_pressed");
+    keyboardElements.get(event.code).classList.add('keyboard__key_pressed');
     handleCommandKeysDown(event);
     handleKeyUp(keyboardElements.get(event.code), event);
     handleTextarea(event.code);
   }
 });
 
-document.addEventListener('keyup', function(event) {
+document.addEventListener('keyup', (event) => {
   if (keyboardElements.has(event.code)) {
-    keyboardElements.get(event.code).classList.remove("keyboard__key_pressed");
+    keyboardElements.get(event.code).classList.remove('keyboard__key_pressed');
     handleCommandKeysUp(event);
   }
 });
 
-const handleTextarea = (keyCode) => {
-  let key = keys[keysMode][keyCode];
-  let text = keyboardElements.get(keyCode).innerText;
-  let start = textarea.selectionStart;
-  let end = textarea.selectionEnd;
-  if (keyType(key) === "command") {
-    if (keyCode === "Backspace") {
-      textarea.setRangeText(
-        "",
-        start == end ? start - 1 : start,
-        end,
-        "end"
-      );
-    }
-    if (keyCode === "Delete") {
-      textarea.setRangeText(
-        "",
-        start,
-        start == end ? end + 1 : end,
-        "end"
-      );
-    }
-    if (keyCode === "Enter") {
-      textarea.setRangeText("\n", start, end, "end");
-    }
-    if (keyCode === "Tab") {
-      textarea.setRangeText("    ", start, end, "end");
-    }
-    if (keyCode === "ArrowRight") {
-      textarea.setSelectionRange(start + 1, end + 1);
-    }
-    if (keyCode === "ArrowLeft") {
-      textarea.setSelectionRange(start - 1, end - 1);
-    }
-    return;
-  }
-  if (end !== textarea.textLength || start !== end) {
-    textarea.setRangeText(text, start, end, "end");
-  } else {
-    textarea.value += text;
-  }
-}
-
-const handleMouseUp = (keyElement) => {
-  const mouseUpOutOfElement = () => {
-    keyElement.classList.remove("keyboard__key_pressed");
-    document.removeEventListener('mouseup', mouseUpOutOfElement);
-    document.removeEventListener('visibilitychange', mouseUpOutOfElement);
-  };
-  document.addEventListener('mouseup', mouseUpOutOfElement);
-  document.addEventListener('visibilitychange', mouseUpOutOfElement);
-}
-
-const handleKeyUp = (keyElement) => {
-  const mouseUpOutOfElement = () => {
-    keyElement.classList.remove("keyboard__key_pressed");
-    document.removeEventListener('visibilitychange', mouseUpOutOfElement);
-  };
-  document.addEventListener('visibilitychange', mouseUpOutOfElement);
-}
-
-const handleCommandKeysDown = (event) => {
-  event.preventDefault();
-  if (event.altKey && event.ctrlKey && !appStates["changingLang"]) {
-    appStates["changingLang"] = true;
-    changeKeysMode();
-    setKeys(keys[keysMode]);
-  }
-  if (event.shiftKey && !appStates["changingPrimaryValues"]) {
-    appStates["changingPrimaryValues"] = true;
-    addUpperCase(keys[keysMode]);
-    updateSymbolKeys(keys[keysMode], "secondary");
-  }
-}
-
-const handleCommandKeysUp = (event) => {
-  if (event.altKey ^ event.ctrlKey) {
-    appStates["changingLang"] = false;
-  }
-  if (!event.shiftKey) {
-    appStates["changingPrimaryValues"] = false;
-    removeUpperCase(keys[keysMode]);
-    updateSymbolKeys(keys[keysMode], "primary");
-  }
-}
+addEventListenersToMouse();
+setKeys(keysEn);
