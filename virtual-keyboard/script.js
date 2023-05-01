@@ -135,6 +135,7 @@ for (let keyCode in keyboardKeys) {
   }
   key.addEventListener('mousedown', () => {
     key.classList.add("keyboard__key_pressed");
+    handleMouseUp(key);
     handleTextarea(keyCode);
     textarea.focus();
   })
@@ -148,6 +149,7 @@ for (let keyCode in keyboardKeys) {
 document.addEventListener('keydown', function(event) {
   if (keyboardElements.has(event.code)) {
     keyboardElements.get(event.code).classList.add("keyboard__key_pressed");
+    handleKeyUp(keyboardElements.get(event.code));
     handleTextarea(event.code);
   }
 });
@@ -168,4 +170,22 @@ const handleTextarea = (keyCode) => {
   } else {
     textarea.value += text;
   }
+}
+
+const handleMouseUp = (key) => {
+  const mouseUpOutOfElement = () => {
+    key.classList.remove("keyboard__key_pressed");
+    document.removeEventListener('mouseup', mouseUpOutOfElement);
+    document.removeEventListener('visibilitychange', mouseUpOutOfElement);
+  };
+  document.addEventListener('mouseup', mouseUpOutOfElement);
+  document.addEventListener('visibilitychange', mouseUpOutOfElement);
+}
+
+const handleKeyUp = (key) => {
+  const mouseUpOutOfElement = () => {
+    key.classList.remove("keyboard__key_pressed");
+    document.removeEventListener('visibilitychange', mouseUpOutOfElement);
+  };
+  document.addEventListener('visibilitychange', mouseUpOutOfElement);
 }
