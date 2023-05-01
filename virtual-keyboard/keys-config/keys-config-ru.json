@@ -1,0 +1,268 @@
+{
+	"Backquote": {
+		"type": "letter",
+		"value": "ё"
+	},
+	"Digit1": {
+		"type": "symbol",
+		"primaryValue": "1",
+		"secondaryValue": "!"
+	},
+	"Digit2": {
+		"type": "symbol",
+		"primaryValue": "2",
+		"secondaryValue": "\""
+	},
+	"Digit3": {
+		"type": "symbol",
+		"primaryValue": "3",
+		"secondaryValue": "№"
+	},
+	"Digit4": {
+		"type": "symbol",
+		"primaryValue": "4",
+		"secondaryValue": ";"
+	},
+	"Digit5": {
+		"type": "symbol",
+		"primaryValue": "5",
+		"secondaryValue": "%"
+	},
+	"Digit6": {
+		"type": "symbol",
+		"primaryValue": "6",
+		"secondaryValue": ":"
+	},
+	"Digit7": {
+		"type": "symbol",
+		"primaryValue": "7",
+		"secondaryValue": "?"
+	},
+	"Digit8": {
+		"type": "symbol",
+		"primaryValue": "8",
+		"secondaryValue": "*"
+	},
+	"Digit9": {
+		"type": "symbol",
+		"primaryValue": "9",
+		"secondaryValue": "("
+	},
+	"Digit0": {
+		"type": "symbol",
+		"primaryValue": "0",
+		"secondaryValue": ")"
+	},
+	"Minus": {
+		"type": "symbol",
+		"primaryValue": "-",
+		"secondaryValue": "_"
+	},
+	"Equal": {
+		"type": "symbol",
+		"primaryValue": "=",
+		"secondaryValue": "+"
+	},
+	"Backspace": {
+		"type": "command",
+		"value": "backspace"
+	},
+	"Tab": {
+		"type": "command",
+		"value": "tab"
+	},
+	"KeyQ": {
+		"type": "letter",
+		"value": "й"
+	},
+	"KeyW": {
+		"type": "letter",
+		"value": "ц"
+	},
+	"KeyE": {
+		"type": "letter",
+		"value": "у"
+	},
+	"KeyR": {
+		"type": "letter",
+		"value": "к"
+	},
+	"KeyT": {
+		"type": "letter",
+		"value": "е"
+	},
+	"KeyY": {
+		"type": "letter",
+		"value": "н"
+	},
+	"KeyU": {
+		"type": "letter",
+		"value": "г"
+	},
+	"KeyI": {
+		"type": "letter",
+		"value": "ш"
+	},
+	"KeyO": {
+		"type": "letter",
+		"value": "щ"
+	},
+	"KeyP": {
+		"type": "letter",
+		"value": "з"
+	},
+	"BracketLeft": {
+		"type": "letter",
+		"value": "х"
+	},
+	"BracketRight": {
+		"type": "letter",
+		"value": "ъ"
+	},
+	"Delete": {
+		"type": "command",
+		"value": "del"
+	},
+	"CapsLock": {
+		"type": "command",
+		"value": "caps lock"
+	},
+	"KeyA": {
+		"type": "letter",
+		"value": "ф"
+	},
+	"KeyS": {
+		"type": "letter",
+		"value": "ы"
+	},
+	"KeyD": {
+		"type": "letter",
+		"value": "в"
+	},
+	"KeyF": {
+		"type": "letter",
+		"value": "а"
+	},
+	"KeyG": {
+		"type": "letter",
+		"value": "п"
+	},
+	"KeyH": {
+		"type": "letter",
+		"value": "р"
+	},
+	"KeyJ": {
+		"type": "letter",
+		"value": "о"
+	},
+	"KeyK": {
+		"type": "letter",
+		"value": "л"
+	},
+	"KeyL": {
+		"type": "letter",
+		"value": "д"
+	},
+	"Semicolon": {
+		"type": "letter",
+		"value": "ж"
+	},
+	"Quote": {
+		"type": "letter",
+		"value": "э"
+	},
+	"Enter": {
+		"type": "command",
+		"value": "enter"
+	},
+	"ShiftLeft": {
+		"type": "command",
+		"value": "shift"
+	},
+	"KeyZ": {
+		"type": "letter",
+		"value": "я"
+	},
+	"KeyX": {
+		"type": "letter",
+		"value": "ч"
+	},
+	"KeyC": {
+		"type": "letter",
+		"value": "с"
+	},
+	"KeyV": {
+		"type": "letter",
+		"value": "м"
+	},
+	"KeyB": {
+		"type": "letter",
+		"value": "и"
+	},
+	"KeyN": {
+		"type": "letter",
+		"value": "т"
+	},
+	"KeyM": {
+		"type": "letter",
+		"value": "ь"
+	},
+	"Comma": {
+		"type": "letter",
+		"value": "б"
+	},
+	"Period": {
+		"type": "letter",
+		"value": "ю"
+	},
+	"Slash": {
+		"type": "symbol",
+		"primaryValue": ".",
+		"secondaryValue": ","
+	},
+	"ArrowUp": {
+		"type": "command",
+		"value": "up"
+	},
+	"ShiftRight": {
+		"type": "command",
+		"value": "shift"
+	},
+	"ControlLeft": {
+		"type": "command",
+		"value": "ctrl"
+	},
+	"MetaLeft": {
+		"type": "command",
+		"value": "win"
+	},
+	"AltLeft": {
+		"type": "command",
+		"value": "alt"
+	},
+	"Space": {
+		"type": "symbol",
+		"primaryValue": "space",
+		"secondaryValue": ""
+	},
+	"AltRight": {
+		"type": "command",
+		"value": "alt"
+	},
+	"ArrowLeft": {
+		"type": "command",
+		"value": "left"
+	},
+	"ArrowDown": {
+		"type": "command",
+		"value": "down"
+	},
+	"ArrowRight": {
+		"type": "command",
+		"value": "right"
+	},
+	"ControlRight": {
+		"type": "command",
+		"value": "ctrl"
+	}
+}

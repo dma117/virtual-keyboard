@@ -1,3 +1,13 @@
+import { CommandKey, LetterKey, SymbolKey } from './classes.js';
+import { keysObj } from './keys-config-parser.js';
+
+const path_keys_en = "./keys-config/keys-config-en.json";
+const path_keys_ru = "./keys-config/keys-config-ru.json";
+const keysEn = keysObj(path_keys_en);
+const keysRu = keysObj(path_keys_ru);
+console.log(keysEn);
+console.log(keysEn["Backquote"].primaryValue)
+
 const section = document.createElement('section');
 const textarea = document.createElement('textarea');
 textarea.classList.add("textarea", "textarea_centered-h");
@@ -22,52 +32,18 @@ document.body.insertAdjacentHTML(
 
 const keyboard = document.querySelector(".keyboard");
 
-class Key {
-  constructor(keyValue, keyType) {
-    this.value = keyValue;
-    this.type = keyType;
+const keyType = (key) => {
+  if (key instanceof LetterKey) {
+    return "letter";
   }
-
-  get value() {
-    return this._value;
+  if (key instanceof SymbolKey) {
+    return "symbol";
   }
-
-  set value(newValue) {
-    this._value = newValue; 
-  }
-
-  get type() {
-    return this._type;
-  }
-
-  set type(newType) {
-    this._type = newType;
+  if (key instanceof CommandKey) {
+    return "command";
   }
 }
 
-const keyTypes = {
-  letter: 'letter',
-  digit: 'digit',
-  special: 'special',
-}
-
-const availableKeyValuesDefault = [
-  '`', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', 'backspace',
-  'tab', 'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']', 'del',
-  'caps lock', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';', '\'', 'enter',
-  'shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/', 'up', 'shift',
-  'ctrl', 'win', 'alt', 'space', 'alt', 'left', 'down', 'right', 'ctrl'
-]
-const specialKeys = [
-  'backspace', 
-  'tab', 'del', 
-  'caps lock', 'enter', 
-  'shift', 'up', 
-  'ctrl', 'win', 'alt', 'left', 'down', 'right'
-];
-const additionalLetterKeys = [
-  '`', '-', '=', '[', ']', '\\', ';', '\'', '.', '/', 'space'
-];
 const keyCodes = [
   "Backquote", "Digit1", "Digit2", "Digit3", "Digit4",  "Digit5",
   "Digit6",  "Digit7",  "Digit8",  "Digit9", "Digit0", "Minus",
@@ -80,70 +56,69 @@ const keyCodes = [
   "ArrowDown", "ArrowRight", "ControlRight",
 ]
 
-let isLetterKey = (keyValue) => {
-  const codeA = 65;
-  const codeZ = 90;
-  const keyCode = keyValue.codePointAt(0);
-  const additionalLetterKey = additionalLetterKeys.includes(keyValue);
-  return (keyCode >= codeA && keyCode <= codeZ) || additionalLetterKey;
-};
-let isDigitKey = (keyValue) => keyValue >= "0" && keyValue <= "9";
-let isSpecialKey = (keyValue) => specialKeys.includes(keyValue);
-
-const keyboardKeys = {};
 const keyboardElements = new Map();
 
-for (let i = 0; i < availableKeyValuesDefault.length; i++) {
-  let keyCode = keyCodes[i];
-  let keyValue = availableKeyValuesDefault[i];
-  let keyType = 
-      isLetterKey(keyValue) ? keyTypes.letter :
-      isDigitKey(keyValue) ? keyTypes.digit :
-      keyTypes.special;
-  let key = new Key(keyValue, keyType);
-  keyboardKeys[keyCode] = key;
-}
-
-for (let keyCode in keyboardKeys) {
-  let keyValue = keyboardKeys[keyCode].value;
-  let key = document.createElement('div');
-  key.innerText = keyValue;
-  key.classList.add("keyboard__key");
-  switch(keyValue) {
-    case 'backspace':
-      key.classList.add("keyboard__key_backspace");
+for (let keyCode of keyCodes) {
+  let keyElement = document.createElement('div');
+  keyElement.classList.add("keyboard__key");
+  switch(keyCode) {
+    case 'Backspace':
+      keyElement.classList.add("keyboard__key_backspace");
       break;
-    case 'tab':
-      key.classList.add("keyboard__key_tab");
+    case 'Tab':
+      keyElement.classList.add("keyboard__key_tab");
       break;
-    case 'del':
-      key.classList.add("keyboard__key_del");
+    case 'Delete':
+      keyElement.classList.add("keyboard__key_del");
       break;
-    case 'caps lock':
-      key.classList.add("keyboard__key_caps-lock");
+    case 'CapsLock':
+      keyElement.classList.add("keyboard__key_caps-lock");
       break;
-    case 'enter':
-      key.classList.add("keyboard__key_enter");
+    case 'Enter':
+      keyElement.classList.add("keyboard__key_enter");
       break;
-    case 'shift':
-      key.classList.add("keyboard__key_shift");
+    case 'ShiftLeft':
+    case 'ShiftRight':
+      keyElement.classList.add("keyboard__key_shift");
       break;
-    case 'space':
-      key.classList.add("keyboard__key_space");
-      key.innerText = '';
+    case 'Space':
+      keyElement.classList.add("keyboard__key_space");
       break;
   }
-  key.addEventListener('mousedown', () => {
-    key.classList.add("keyboard__key_pressed");
-    handleMouseUp(key);
+  keyElement.addEventListener('mousedown', () => {
+    keyElement.classList.add("keyboard__key_pressed");
+    handleMouseUp(keyElement);
     handleTextarea(keyCode);
     textarea.focus();
   })
-  key.addEventListener('mouseup', () => {
-    key.classList.remove("keyboard__key_pressed");
+  keyElement.addEventListener('mouseup', () => {
+    keyElement.classList.remove("keyboard__key_pressed");
   })
-  keyboardElements.set(keyCode, key);
-  keyboard.append(key);
+  keyboardElements.set(keyCode, keyElement);
+  keyboard.append(keyElement);
+}
+
+setKeys(keysEn);
+
+function setKeys(keys) {
+  for (let keyCode of keyCodes) {
+    let key = keys[keyCode];
+    switch(keyType(key)) {
+      case "letter":
+        keyboardElements.get(keyCode).innerText = keys[keyCode].value;
+        break;
+      case "symbol":
+        if (key.primaryValue === "space") {
+          keyboardElements.get(keyCode).innerHTML = "&ensp;";
+        } else {
+          keyboardElements.get(keyCode).innerText = keys[keyCode].primaryValue;
+        }
+        break;
+      case "command":
+        keyboardElements.get(keyCode).innerText = keys[keyCode].value;
+        break;
+    }
+  }
 }
 
 document.addEventListener('keydown', function(event) {
@@ -172,9 +147,9 @@ const handleTextarea = (keyCode) => {
   }
 }
 
-const handleMouseUp = (key) => {
+const handleMouseUp = (keyElement) => {
   const mouseUpOutOfElement = () => {
-    key.classList.remove("keyboard__key_pressed");
+    keyElement.classList.remove("keyboard__key_pressed");
     document.removeEventListener('mouseup', mouseUpOutOfElement);
     document.removeEventListener('visibilitychange', mouseUpOutOfElement);
   };
@@ -182,9 +157,9 @@ const handleMouseUp = (key) => {
   document.addEventListener('visibilitychange', mouseUpOutOfElement);
 }
 
-const handleKeyUp = (key) => {
+const handleKeyUp = (keyElement) => {
   const mouseUpOutOfElement = () => {
-    key.classList.remove("keyboard__key_pressed");
+    keyElement.classList.remove("keyboard__key_pressed");
     document.removeEventListener('visibilitychange', mouseUpOutOfElement);
   };
   document.addEventListener('visibilitychange', mouseUpOutOfElement);
